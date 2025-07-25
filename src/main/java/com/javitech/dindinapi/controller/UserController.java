@@ -1,35 +1,44 @@
 package com.javitech.dindinapi.controller;
 
-import com.javitech.dindinapi.service.FirestoreService;
+import com.javitech.dindinapi.model.User;
+import com.javitech.dindinapi.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
-    private final FirestoreService firestoreService;
+    @Autowired
+    private UserService userService;
 
-    public UserController(FirestoreService firestoreService) {
-        this.firestoreService = firestoreService;
+    @GetMapping
+    public ResponseEntity<List<User>> findAll(){
+        return ResponseEntity.status(HttpStatus.OK).body(userService.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Optional<User>> findById(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.OK).body(userService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<String> createUser() {
-        try {
-            String userId = "testeID";
-            Map<String, String> userData = Map.of(
-                    "name", "Vinicius",
-                    "email", "vinicius.kremer@gmail.com"
-            );
-            String documentId = firestoreService.save("users", userId, userData);
-        } catch (ExecutionException | InterruptedException e) {
-            return ResponseEntity.status(500).body("Error creating user: " + e.getMessage());
-        }
-        return ResponseEntity.ok("User created successfully");
+    public ResponseEntity<User> create(@RequestBody User user){
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(user));
+    }
+
+    @PutMapping
+    public ResponseEntity<User> update(@RequestBody User user){
+        return ResponseEntity.status(HttpStatus.OK).body(userService.update(user));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id){
+        userService.deleteById(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
