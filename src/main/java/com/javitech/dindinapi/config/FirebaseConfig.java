@@ -14,7 +14,6 @@ import java.io.IOException;
 
 @Configuration
 public class FirebaseConfig {
-
     @Bean
     public Firestore firestore() throws IOException {
         FileInputStream serviceAccount = new FileInputStream(

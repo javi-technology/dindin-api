@@ -17,7 +17,7 @@ public class FirestoreService {
         this.firestore = firestore;
     }
 
-    public String save(String collection, String document, Map<String, Object> data) throws ExecutionException, InterruptedException {
+    public String save(String collection, String document, Map<String, String> data) throws ExecutionException, InterruptedException {
         DocumentReference docRef = firestore.collection(collection).document(document);
         docRef.set(data).get();
         return docRef.getId();
