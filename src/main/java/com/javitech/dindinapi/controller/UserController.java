@@ -38,16 +38,22 @@ public class UserController {
 
     @PutMapping
     public ResponseEntity<User> update(@RequestBody User user){
+        if (user.getId() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        userService.update(user);
         return ResponseEntity.status(HttpStatus.OK).body(userService.update(user));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id){
+        HashMap<String, Object> response = new HashMap<>();
         userService.deleteById(id);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        response.put("message", "User deleted successfully");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PostMapping("/approve/{id}")
+    @PutMapping("/approve/{id}")
     public ResponseEntity<?> approveUser(@PathVariable UUID id) {
         HashMap<String, Object> response = new HashMap<>();
         userService.approveUser(id);
@@ -55,9 +61,11 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PostMapping("/reject/{id}")
+    @PutMapping("/reject/{id}")
     public ResponseEntity<?> rejectUser(@PathVariable UUID id) {
+        HashMap<String, Object> response = new HashMap<>();
         userService.rejectUser(id);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        response.put("message", "User rejected successfully");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

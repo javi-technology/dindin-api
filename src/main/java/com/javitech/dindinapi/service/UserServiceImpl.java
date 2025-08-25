@@ -59,5 +59,6 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new IllegalArgumentException("UserApproval with ID " + id + " does not exist"));
         user.setIsApproved(false);
         userRepository.save(user);
+        assert user.getIsApproved() == false;
     }
 }
