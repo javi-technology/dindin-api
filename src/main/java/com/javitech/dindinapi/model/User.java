@@ -44,4 +44,7 @@ public class User {
 
     @Column(nullable = false, length = 100)
     private Date updatedAt;
+
+    @Column(nullable = false)
+    private Boolean isApproved;
 }

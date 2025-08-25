@@ -7,12 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/user")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -43,6 +44,20 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id){
         userService.deleteById(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PostMapping("/approve/{id}")
+    public ResponseEntity<?> approveUser(@PathVariable UUID id) {
+        HashMap<String, Object> response = new HashMap<>();
+        userService.approveUser(id);
+        response.put("message", "User approved successfully");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/reject/{id}")
+    public ResponseEntity<?> rejectUser(@PathVariable UUID id) {
+        userService.rejectUser(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
