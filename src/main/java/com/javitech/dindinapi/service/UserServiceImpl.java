@@ -57,18 +57,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public void approveUser(UUID id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("UserApproval with ID " + id + " does not exist"));
+                .orElseThrow(() -> new IllegalArgumentException("User with ID " + id + " does not exist"));
         user.setIsApproved(true);
         userRepository.save(user);
-        assert user.getIsApproved() == true;
     }
 
     @Override
     public void rejectUser(UUID id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("UserApproval with ID " + id + " does not exist"));
+                .orElseThrow(() -> new IllegalArgumentException("User with ID " + id + " does not exist"));
         user.setIsApproved(false);
         userRepository.save(user);
-        assert user.getIsApproved() == false;
     }
 }

@@ -41,8 +41,8 @@ public class UserController {
         if (user.getId() == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        userService.update(user);
-        return ResponseEntity.status(HttpStatus.OK).body(userService.update(user));
+        User userUpdated = userService.update(user);
+        return ResponseEntity.status(HttpStatus.OK).body(userUpdated);
     }
 
     @DeleteMapping("/{id}")
