@@ -68,4 +68,9 @@ public class UserController {
         response.put("message", "User rejected successfully");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @GetMapping("/approved")
+    public ResponseEntity<List<User>> findByApproved() {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.findByApproved());
+    }
 }
