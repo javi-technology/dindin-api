@@ -12,4 +12,7 @@ public interface UserService {
     Optional<User> findById(UUID id);
     User update(User user);
     void deleteById(UUID id);
+    List<User> findByApproved();
+    void approveUser(UUID id);
+    void rejectUser(UUID id);
 }

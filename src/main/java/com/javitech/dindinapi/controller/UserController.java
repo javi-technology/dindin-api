@@ -7,12 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/user")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -37,12 +38,39 @@ public class UserController {
 
     @PutMapping
     public ResponseEntity<User> update(@RequestBody User user){
-        return ResponseEntity.status(HttpStatus.OK).body(userService.update(user));
+        if (user.getId() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        User userUpdated = userService.update(user);
+        return ResponseEntity.status(HttpStatus.OK).body(userUpdated);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id){
+        HashMap<String, Object> response = new HashMap<>();
         userService.deleteById(id);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        response.put("message", "User deleted successfully");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PutMapping("/approve/{id}")
+    public ResponseEntity<?> approveUser(@PathVariable UUID id) {
+        HashMap<String, Object> response = new HashMap<>();
+        userService.approveUser(id);
+        response.put("message", "User approved successfully");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PutMapping("/reject/{id}")
+    public ResponseEntity<?> rejectUser(@PathVariable UUID id) {
+        HashMap<String, Object> response = new HashMap<>();
+        userService.rejectUser(id);
+        response.put("message", "User rejected successfully");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/approved")
+    public ResponseEntity<List<User>> findByApproved() {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.findByApproved());
     }
 }
