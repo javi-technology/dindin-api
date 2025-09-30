@@ -16,26 +16,26 @@ public class QuoteServiceImpl implements QuoteService{
 
     @Override
     public Quote save(Quote quote) {
-        return null;
+        return quoteRepository.save(quote);
     }
 
     @Override
     public List<Quote> findAll() {
-        return List.of();
+        return quoteRepository.findAll();
     }
 
     @Override
     public Optional<Quote> findById(UUID id) {
-        return Optional.empty();
+        return quoteRepository.findById(id);
     }
 
     @Override
-    public Quote update(Quote user) {
-        return null;
+    public Quote update(Quote quote) {
+        return quoteRepository.save(quote);
     }
 
     @Override
     public void deleteById(UUID id) {
-
+        quoteRepository.deleteById(id);
     }
 }
