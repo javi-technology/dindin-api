@@ -10,6 +10,6 @@ public interface QuoteService {
     Quote save(Quote quote);
     List<Quote> findAll();
     Optional<Quote> findById(UUID id);
-    Quote update(Quote user);
+    Quote update(Quote quote);
     void deleteById(UUID id);
 }
