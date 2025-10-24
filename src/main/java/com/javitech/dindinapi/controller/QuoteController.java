@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -34,6 +35,7 @@ public class QuoteController {
         if (quote.getId() != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+
         return ResponseEntity.status(HttpStatus.CREATED).body(quoteService.save(quote));
     }
 
@@ -53,7 +55,13 @@ public class QuoteController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id){
+        Optional<Quote> quote = quoteService.findById(id);
         HashMap<String, Object> response = new HashMap<>();
+
+        if (quote.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Quote not found");
+        }
+
         quoteService.deleteById(id);
         response.put("message", "Quote deleted successfully");
         return ResponseEntity.status(HttpStatus.OK).body(response);
