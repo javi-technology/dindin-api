@@ -6,7 +6,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.UUID;
 
 @Data
@@ -25,7 +24,7 @@ public class Quote {
     private Float payment;
 
     @Column(nullable = false)
-    private Date payday;
+    private LocalDateTime payday;
 
     @Column(updatable = false)
     @CreationTimestamp
