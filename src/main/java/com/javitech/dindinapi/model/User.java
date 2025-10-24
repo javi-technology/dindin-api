@@ -2,6 +2,8 @@ package com.javitech.dindinapi.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 import java.util.UUID;
@@ -39,10 +41,12 @@ public class User {
     @Column(nullable = false, length = 100)
     private Date birthday;
 
-    @Column(nullable = false, length = 100)
+    @Column(updatable = false)
+    @CreationTimestamp
     private Date createdAt;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false)
+    @UpdateTimestamp
     private Date updatedAt;
 
     @Column(nullable = false)
