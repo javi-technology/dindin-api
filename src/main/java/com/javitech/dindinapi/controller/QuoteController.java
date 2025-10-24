@@ -42,6 +42,11 @@ public class QuoteController {
         if (quote.getId() == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+
+        if (quoteService.findById(quote.getId()).isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
         Quote quoteUpdated = quoteService.update(quote);
         return ResponseEntity.status(HttpStatus.OK).body(quoteUpdated);
     }
