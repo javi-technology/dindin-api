@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -24,8 +23,10 @@ public class QuoteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Quote>> findById(@PathVariable UUID id){
-        return ResponseEntity.status(HttpStatus.OK).body(quoteService.findById(id));
+    public ResponseEntity<Quote> findById(@PathVariable UUID id){
+        return quoteService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
