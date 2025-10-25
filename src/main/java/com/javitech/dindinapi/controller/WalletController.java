@@ -43,12 +43,12 @@ public class WalletController {
         }
 
         if (verifyQuotes(wallet.getQuotes())) {
-            resp.put("message", "Quote não cadastrada.");
+            resp.put("message", "Quote not registered.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resp);
         }
 
         Wallet walletCreated = walletService.save(wallet);
-        resp.put("message", "Wallet cadastrada com sucesso.");
+        resp.put("message", "Wallet created successfully.");
         resp.put("data", walletCreated);
         return ResponseEntity.status(HttpStatus.CREATED).body(resp);
     }
@@ -66,12 +66,12 @@ public class WalletController {
         }
 
         if (verifyQuotes(wallet.getQuotes())) {
-            resp.put("message", "Quote não cadastrada.");
+            resp.put("message", "Quote not registered.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resp);
         }
 
         Wallet walletUpdated = walletService.update(wallet);
-        resp.put("message", "Wallet atualizada com sucesso.");
+        resp.put("message", "Wallet updated successfully.");
         resp.put("data", walletUpdated);
         return ResponseEntity.status(HttpStatus.OK).body(resp);
     }
@@ -91,12 +91,20 @@ public class WalletController {
     }
 
     private boolean verifyQuotes(List<UUID> quotes) {
+        // TODO: Implementar recuperação em lote para otimização
+        // List<Quote> foundQuotes = quoteService.findAllByIds(quotes);
+        // return foundQuotes.size() != quotes.size();
+        if (quotes == null) {
+            return true;
+        }
+
         for (UUID quoteUuid : quotes) {
             Optional<Quote> existingQuote = quoteService.findById(quoteUuid);
             if (existingQuote.isEmpty()) {
                 return true;
             }
         }
+
         return false;
     }
 }

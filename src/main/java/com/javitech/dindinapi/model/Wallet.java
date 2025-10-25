@@ -24,10 +24,20 @@ public class Wallet {
     @Column(nullable = false)
     private String description;
 
-    @Column(nullable = false)
+    @ElementCollection
+    @CollectionTable(
+            name = "wallet_quotes",
+            joinColumns = @JoinColumn(name = "wallet_id")
+    )
+    @Column(name = "quote_uuid", nullable = false)
     private List<UUID> quotes;
 
-    @Column(nullable = false)
+    @ElementCollection
+    @CollectionTable(
+            name = "wallet_frozen_quotes",
+            joinColumns = @JoinColumn(name = "wallet_id")
+    )
+    @Column(name = "frozen_quote_uuid", nullable = false)
     private List<UUID> frozenQuotes;
 
     @Column(updatable = false)
