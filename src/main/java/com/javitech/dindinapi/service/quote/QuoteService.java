@@ -1,4 +1,4 @@
-package com.javitech.dindinapi.service;
+package com.javitech.dindinapi.service.quote;
 
 import com.javitech.dindinapi.model.Quote;
 

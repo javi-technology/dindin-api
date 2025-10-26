@@ -1,4 +1,4 @@
-package com.javitech.dindinapi.service;
+package com.javitech.dindinapi.service.wallet;
 
 import com.javitech.dindinapi.model.Wallet;
 

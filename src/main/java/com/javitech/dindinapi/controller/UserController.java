@@ -1,7 +1,7 @@
 package com.javitech.dindinapi.controller;
 
 import com.javitech.dindinapi.model.User;
-import com.javitech.dindinapi.service.UserService;
+import com.javitech.dindinapi.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

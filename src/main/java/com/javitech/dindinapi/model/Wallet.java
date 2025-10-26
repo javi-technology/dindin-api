@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Data
 @Entity
-@Table(name="\"Wallet\"")
+@Table(name="wallets")
 public class Wallet {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

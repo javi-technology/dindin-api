@@ -1,4 +1,4 @@
-package com.javitech.dindinapi.service;
+package com.javitech.dindinapi.service.user;
 
 import com.javitech.dindinapi.model.User;
 import com.javitech.dindinapi.repository.UserRepository;

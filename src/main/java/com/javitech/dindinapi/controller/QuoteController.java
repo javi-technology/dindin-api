@@ -1,7 +1,7 @@
 package com.javitech.dindinapi.controller;
 
 import com.javitech.dindinapi.model.Quote;
-import com.javitech.dindinapi.service.QuoteService;
+import com.javitech.dindinapi.service.quote.QuoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
