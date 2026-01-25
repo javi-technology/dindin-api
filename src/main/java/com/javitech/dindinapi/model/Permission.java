@@ -2,10 +2,8 @@ package com.javitech.dindinapi.model;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
-
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,7 +14,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name="permissions")
+@Table(name = "permissions")
 public class Permission {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
