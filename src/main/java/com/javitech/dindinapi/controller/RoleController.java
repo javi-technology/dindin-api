@@ -29,9 +29,15 @@ public class RoleController {
     @GetMapping("/{id}")
     public ResponseEntity<HashMap<String, Object>> findById(@PathVariable UUID id){
         HttpServiceImpl httpService = new HttpServiceImpl();
+        Optional<Role> role = roleService.findById(id);
+        if (role.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(httpService.createResponse("Role with ID " + id + " does not exist.", null));
+        }
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(httpService.createResponse("Role retrieved successfully.", roleService.findById(id)));
+                .body(httpService.createResponse("Role retrieved successfully.", role.get()));
     }
 
     @PostMapping
