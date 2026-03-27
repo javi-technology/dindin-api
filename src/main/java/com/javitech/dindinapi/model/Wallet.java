@@ -26,19 +26,19 @@ public class Wallet {
 
     @ElementCollection
     @CollectionTable(
-            name = "wallet_quotes",
+            name = "wallet_assets",
             joinColumns = @JoinColumn(name = "wallet_id")
     )
-    @Column(name = "quote_uuid", nullable = false)
-    private List<UUID> quotes;
+    @Column(name = "asset_uuid", nullable = false)
+    private List<UUID> assets;
 
     @ElementCollection
     @CollectionTable(
-            name = "wallet_frozen_quotes",
+            name = "wallet_frozen_assets",
             joinColumns = @JoinColumn(name = "wallet_id")
     )
-    @Column(name = "frozen_quote_uuid", nullable = false)
-    private List<UUID> frozenQuotes;
+    @Column(name = "frozen_asset_uuid", nullable = false)
+    private List<UUID> frozenAssets;
 
     @Column(updatable = false)
     @CreationTimestamp

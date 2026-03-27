@@ -1,0 +1,268 @@
+{
+    "info": {
+        "name": "DinDin API - Role",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:8080"
+        },
+        {
+            "key": "roleId",
+            "value": ""
+        }
+    ],
+    "item": [
+        {
+            "name": "POST - Criar role (sucesso)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                            "pm.test('Retorna dados da role', () => {",
+                            "  const json = pm.response.json();",
+                            "  pm.expect(json.data).to.have.property('id');",
+                            "  pm.expect(json.data.name).to.eql('ADMIN');",
+                            "  pm.collectionVariables.set('roleId', json.data.id);",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": "{{baseUrl}}/api/role",
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"name\": \"ADMIN\",\n  \"description\": \"Administrador do sistema\",\n  \"permissions\": []\n}"
+                }
+            }
+        },
+        {
+            "name": "POST - Criar role com ID no body (400)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Status 400', () => pm.response.to.have.status(400));"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": "{{baseUrl}}/api/role",
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"id\": \"00000000-0000-0000-0000-000000000001\",\n  \"name\": \"MANAGER\",\n  \"description\": \"Gerente\",\n  \"permissions\": []\n}"
+                }
+            }
+        },
+        {
+            "name": "GET - Listar todas as roles",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                            "pm.test('Retorna array de roles', () => {",
+                            "  const json = pm.response.json();",
+                            "  pm.expect(json.data).to.be.an('array');",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/role"
+            }
+        },
+        {
+            "name": "GET - Buscar role por ID (sucesso)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                            "pm.test('Retorna role correta', () => {",
+                            "  const json = pm.response.json();",
+                            "  pm.expect(json.message).to.eql('Role retrieved successfully.');",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/role/{{roleId}}"
+            }
+        },
+        {
+            "name": "GET - Buscar role por ID inexistente",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Status 200 com data vazio', () => {",
+                            "  pm.response.to.have.status(200);",
+                            "  const json = pm.response.json();",
+                            "  pm.expect(json.data).to.be.empty;",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/role/00000000-0000-0000-0000-000000000000"
+            }
+        },
+        {
+            "name": "PUT - Atualizar role (sucesso)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                            "pm.test('Nome atualizado', () => {",
+                            "  const json = pm.response.json();",
+                            "  pm.expect(json.data.name).to.eql('SUPER_ADMIN');",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "PUT",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": "{{baseUrl}}/api/role",
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"id\": \"{{roleId}}\",\n  \"name\": \"SUPER_ADMIN\",\n  \"description\": \"Super administrador do sistema\",\n  \"permissions\": []\n}"
+                }
+            }
+        },
+        {
+            "name": "PUT - Atualizar role sem ID (400)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Status 400', () => pm.response.to.have.status(400));"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "PUT",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": "{{baseUrl}}/api/role",
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"name\": \"EDITOR\",\n  \"description\": \"Editor sem ID\",\n  \"permissions\": []\n}"
+                }
+            }
+        },
+        {
+            "name": "PUT - Atualizar role com ID inexistente (404)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Status 404', () => pm.response.to.have.status(404));"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "PUT",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": "{{baseUrl}}/api/role",
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"id\": \"00000000-0000-0000-0000-000000000000\",\n  \"name\": \"INEXISTENTE\",\n  \"description\": \"Não existe\",\n  \"permissions\": []\n}"
+                }
+            }
+        },
+        {
+            "name": "DELETE - Deletar role (sucesso)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                            "pm.test('Mensagem de sucesso', () => {",
+                            "  const json = pm.response.json();",
+                            "  pm.expect(json.message).to.eql('Role deleted successfully.');",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "DELETE",
+                "url": "{{baseUrl}}/api/role/{{roleId}}"
+            }
+        },
+        {
+            "name": "DELETE - Deletar role com ID inexistente (404)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Status 404', () => pm.response.to.have.status(404));",
+                            "pm.test('Mensagem de erro', () => {",
+                            "  const json = pm.response.json();",
+                            "  pm.expect(json.message).to.include('does not exist');",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "DELETE",
+                "url": "{{baseUrl}}/api/role/00000000-0000-0000-0000-000000000000"
+            }
+        }
+    ]
+}

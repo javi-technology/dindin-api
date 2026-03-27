@@ -1,0 +1,286 @@
+{
+  "info": {
+    "name": "DinDin API - Permission",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "permissionId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "POST - Criar permission (sucesso)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 201', () => pm.response.to.have.status(201));",
+              "pm.test('Retorna dados da permission', () => {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json.data).to.have.property('id');",
+              "  pm.expect(json.data.name).to.eql('MANAGE_USERS');",
+              "  pm.collectionVariables.set('permissionId', json.data.id);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/permission",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"MANAGE_USERS\",\n  \"description\": \"Permite gerenciar usuários\",\n  \"slugName\": \"manage-users\"\n}"
+        }
+      }
+    },
+    {
+      "name": "POST - Criar permission sem name (400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 400', () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/permission",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"description\": \"Sem nome\",\n  \"slugName\": \"sem-nome\"\n}"
+        }
+      }
+    },
+    {
+      "name": "POST - Criar permission com body vazio (400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 400', () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/permission",
+        "body": {
+          "mode": "raw",
+          "raw": "{}"
+        }
+      }
+    },
+    {
+      "name": "GET - Listar todas as permissions",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));",
+              "pm.test('Retorna array de permissions', () => {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json.data).to.be.an('array');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/permission"
+      }
+    },
+    {
+      "name": "GET - Buscar permission por ID (sucesso)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));",
+              "pm.test('Retorna permission correta', () => {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json.data.id).to.eql(pm.collectionVariables.get('permissionId'));",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/permission/{{permissionId}}"
+      }
+    },
+    {
+      "name": "GET - Buscar permission por ID inexistente",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status não é 200 ou retorna vazio', () => {",
+              "  const code = pm.response.code;",
+              "  pm.expect([200, 404]).to.include(code);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/permission/00000000-0000-0000-0000-000000000000"
+      }
+    },
+    {
+      "name": "PUT - Atualizar permission (sucesso)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));",
+              "pm.test('Nome atualizado', () => {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json.data.name).to.eql('MANAGE_ROLES');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/permission",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"{{permissionId}}\",\n  \"name\": \"MANAGE_ROLES\",\n  \"description\": \"Permite gerenciar roles\",\n  \"slugName\": \"manage-roles\"\n}"
+        }
+      }
+    },
+    {
+      "name": "PUT - Atualizar permission sem ID (400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 400', () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/permission",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"MANAGE_ROLES\",\n  \"description\": \"Sem ID\",\n  \"slugName\": \"manage-roles\"\n}"
+        }
+      }
+    },
+    {
+      "name": "PUT - Atualizar permission com ID inexistente (404)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/permission",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"00000000-0000-0000-0000-000000000000\",\n  \"name\": \"INEXISTENTE\",\n  \"description\": \"Não existe\",\n  \"slugName\": \"inexistente\"\n}"
+        }
+      }
+    },
+    {
+      "name": "DELETE - Deletar permission (sucesso)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/api/permission/{{permissionId}}"
+      }
+    },
+    {
+      "name": "DELETE - Deletar permission com ID inexistente (404)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/api/permission/00000000-0000-0000-0000-000000000000"
+      }
+    }
+  ]
+}

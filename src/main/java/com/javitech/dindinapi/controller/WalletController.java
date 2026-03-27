@@ -1,8 +1,8 @@
 package com.javitech.dindinapi.controller;
 
-import com.javitech.dindinapi.model.Quote;
+import com.javitech.dindinapi.model.Asset;
 import com.javitech.dindinapi.model.Wallet;
-import com.javitech.dindinapi.service.quote.QuoteService;
+import com.javitech.dindinapi.service.asset.AssetService;
 import com.javitech.dindinapi.service.wallet.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ public class WalletController {
     @Autowired
     private WalletService walletService;
     @Autowired
-    private QuoteService quoteService;
+    private AssetService assetService;
 
     @GetMapping
     public ResponseEntity<List<Wallet>> findAll(){
@@ -42,8 +42,8 @@ public class WalletController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        if (verifyQuotes(wallet.getQuotes())) {
-            resp.put("message", "Quote not registered.");
+        if (verifyAssets(wallet.getAssets())) {
+            resp.put("message", "Asset not registered.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resp);
         }
 
@@ -65,8 +65,8 @@ public class WalletController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        if (verifyQuotes(wallet.getQuotes())) {
-            resp.put("message", "Quote not registered.");
+        if (verifyAssets(wallet.getAssets())) {
+            resp.put("message", "Asset not registered.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resp);
         }
 
@@ -90,17 +90,17 @@ public class WalletController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    private boolean verifyQuotes(List<UUID> quotes) {
+    private boolean verifyAssets(List<UUID> assets) {
         // TODO: Implementar recuperação em lote para otimização
-        // List<Quote> foundQuotes = quoteService.findAllByIds(quotes);
-        // return foundQuotes.size() != quotes.size();
-        if (quotes == null) {
+        // List<Asset> foundAssets = assetService.findAllByIds(assets);
+        // return foundAssets.size() != assets.size();
+        if (assets == null) {
             return true;
         }
 
-        for (UUID quoteUuid : quotes) {
-            Optional<Quote> existingQuote = quoteService.findById(quoteUuid);
-            if (existingQuote.isEmpty()) {
+        for (UUID assetUuid : assets) {
+            Optional<Asset> existingAsset = assetService.findById(assetUuid);
+            if (existingAsset.isEmpty()) {
                 return true;
             }
         }

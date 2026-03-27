@@ -23,10 +23,13 @@ public class Role {
     @Column(nullable = false)
     private String description;
 
-    @ElementCollection
-    @CollectionTable(name = "role_permissions", joinColumns = @JoinColumn(name = "role_id"))
-    @Column(name = "permission_uuid", nullable = false)
-    private List<UUID> permissions;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "role_permissions",
+        joinColumns = @JoinColumn(name = "role_id"),
+        inverseJoinColumns = @JoinColumn(name = "permission_id")
+    )
+    private List<Permission> permissions;
 
     @Column(updatable = false)
     @CreationTimestamp
