@@ -1,17 +1,18 @@
 package com.javitech.dindinapi.model;
 
 import jakarta.persistence.*;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.util.Date;
-import java.util.UUID;
-
 @Data
 @Entity
-@Table(name="\"User\"")
+@Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "uuid", updatable = false, nullable = false)
@@ -41,6 +42,14 @@ public class User {
     @Column(nullable = false, length = 100)
     private Date birthday;
 
+    @Column(nullable = false)
+    private Boolean isApproved;
+
+    @ElementCollection
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role_uuid", nullable = false)
+    private List<UUID> roles;
+
     @Column(updatable = false)
     @CreationTimestamp
     private Date createdAt;
@@ -48,7 +57,4 @@ public class User {
     @Column(nullable = false)
     @UpdateTimestamp
     private Date updatedAt;
-
-    @Column(nullable = false)
-    private Boolean isApproved;
 }

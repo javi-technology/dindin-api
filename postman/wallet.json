@@ -1,0 +1,409 @@
+{
+  "info": {
+    "name": "DinDin API - Wallet",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "walletId",
+      "value": ""
+    },
+    {
+      "key": "assetId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Setup - Criar asset para testes",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Asset criado', () => {",
+              "  pm.response.to.have.status(201);",
+              "  const json = pm.response.json();",
+              "  pm.collectionVariables.set('assetId', json.id);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/asset",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"acronym\": \"PETR4\",\n  \"payment\": 38.50,\n  \"payday\": \"2026-04-01T00:00:00\"\n}"
+        }
+      }
+    },
+    {
+      "name": "POST - Criar wallet (sucesso)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 201', () => pm.response.to.have.status(201));",
+              "pm.test('Retorna dados da wallet', () => {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json.message).to.eql('Wallet created successfully.');",
+              "  pm.expect(json.data).to.have.property('id');",
+              "  pm.expect(json.data.name).to.eql('Carteira Principal');",
+              "  pm.collectionVariables.set('walletId', json.data.id);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/wallet",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Carteira Principal\",\n  \"description\": \"Carteira de investimentos de longo prazo\",\n  \"assets\": [\"{{assetId}}\"],\n  \"frozenAssets\": []\n}"
+        }
+      }
+    },
+    {
+      "name": "POST - Criar wallet com ID no body (400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 400', () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/wallet",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"00000000-0000-0000-0000-000000000001\",\n  \"name\": \"Inválida\",\n  \"description\": \"Não deveria criar\",\n  \"assets\": [],\n  \"frozenAssets\": []\n}"
+        }
+      }
+    },
+    {
+      "name": "POST - Criar wallet com asset inexistente (400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 400', () => pm.response.to.have.status(400));",
+              "pm.test('Mensagem de asset não registrado', () => {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json.message).to.eql('Asset not registered.');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/wallet",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Carteira Inválida\",\n  \"description\": \"Asset não existe\",\n  \"assets\": [\"00000000-0000-0000-0000-000000000000\"],\n  \"frozenAssets\": []\n}"
+        }
+      }
+    },
+    {
+      "name": "POST - Criar wallet com assets null (400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 400', () => pm.response.to.have.status(400));",
+              "pm.test('Mensagem de asset não registrado', () => {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json.message).to.eql('Asset not registered.');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/wallet",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Carteira Sem Assets\",\n  \"description\": \"Sem campo assets\"\n}"
+        }
+      }
+    },
+    {
+      "name": "GET - Listar todas as wallets",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));",
+              "pm.test('Retorna array de wallets', () => {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json).to.be.an('array');",
+              "  pm.expect(json.length).to.be.greaterThan(0);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/wallet"
+      }
+    },
+    {
+      "name": "GET - Buscar wallet por ID (sucesso)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));",
+              "pm.test('Retorna wallet correta', () => {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json.id).to.eql(pm.collectionVariables.get('walletId'));",
+              "  pm.expect(json.name).to.eql('Carteira Principal');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/wallet/{{walletId}}"
+      }
+    },
+    {
+      "name": "GET - Buscar wallet por ID inexistente (404)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/wallet/00000000-0000-0000-0000-000000000000"
+      }
+    },
+    {
+      "name": "PUT - Atualizar wallet (sucesso)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));",
+              "pm.test('Nome atualizado', () => {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json.data.name).to.eql('Carteira Reserva');",
+              "  pm.expect(json.message).to.eql('Wallet updated successfully.');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/wallet",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"{{walletId}}\",\n  \"name\": \"Carteira Reserva\",\n  \"description\": \"Reserva de emergência\",\n  \"assets\": [\"{{assetId}}\"],\n  \"frozenAssets\": []\n}"
+        }
+      }
+    },
+    {
+      "name": "PUT - Atualizar wallet sem ID (400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 400', () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/wallet",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Sem ID\",\n  \"description\": \"Faltando ID\",\n  \"assets\": [],\n  \"frozenAssets\": []\n}"
+        }
+      }
+    },
+    {
+      "name": "PUT - Atualizar wallet com ID inexistente (404)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/wallet",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"00000000-0000-0000-0000-000000000000\",\n  \"name\": \"Inexistente\",\n  \"description\": \"Não existe\",\n  \"assets\": [],\n  \"frozenAssets\": []\n}"
+        }
+      }
+    },
+    {
+      "name": "PUT - Atualizar wallet com asset inexistente (400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 400', () => pm.response.to.have.status(400));",
+              "pm.test('Mensagem de asset não registrado', () => {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json.message).to.eql('Asset not registered.');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/wallet",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"{{walletId}}\",\n  \"name\": \"Carteira Atualizada\",\n  \"description\": \"Com asset inválido\",\n  \"assets\": [\"00000000-0000-0000-0000-000000000000\"],\n  \"frozenAssets\": []\n}"
+        }
+      }
+    },
+    {
+      "name": "DELETE - Deletar wallet (sucesso)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));",
+              "pm.test('Mensagem de sucesso', () => {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json.message).to.eql('Wallet deleted successfully');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/api/wallet/{{walletId}}"
+      }
+    },
+    {
+      "name": "DELETE - Deletar wallet com ID inexistente (404)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/api/wallet/00000000-0000-0000-0000-000000000000"
+      }
+    },
+    {
+      "name": "Cleanup - Deletar asset de teste",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Asset deletado', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/api/asset/{{assetId}}"
+      }
+    }
+  ]
+}

@@ -1,17 +1,17 @@
-package com.javitech.dindinapi.service;
+package com.javitech.dindinapi.service.user;
 
 import com.javitech.dindinapi.model.User;
 import com.javitech.dindinapi.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
+
     @Autowired
     private UserRepository userRepository;
 
@@ -56,16 +56,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void approveUser(UUID id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User with ID " + id + " does not exist"));
+        User user = userRepository
+            .findById(id)
+            .orElseThrow(() ->
+                new IllegalArgumentException("User with ID " + id + " does not exist")
+            );
         user.setIsApproved(true);
         userRepository.save(user);
     }
 
     @Override
     public void rejectUser(UUID id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User with ID " + id + " does not exist"));
+        User user = userRepository
+            .findById(id)
+            .orElseThrow(() ->
+                new IllegalArgumentException("User with ID " + id + " does not exist")
+            );
         user.setIsApproved(false);
         userRepository.save(user);
     }

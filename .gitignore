@@ -33,3 +33,8 @@ build/
 .vscode/
 
 **/service-account/*.json
+
+# Gemini
+.gemini/
+
+node_modules/

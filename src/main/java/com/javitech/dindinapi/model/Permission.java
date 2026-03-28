@@ -1,8 +1,14 @@
 package com.javitech.dindinapi.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -10,8 +16,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 @Data
 @Entity
-@Table(name = "wallets")
-public class Wallet {
+@Table(name = "permissions")
+public class Permission {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,15 +30,8 @@ public class Wallet {
     @Column(nullable = false)
     private String description;
 
-    @ElementCollection
-    @CollectionTable(name = "wallet_assets", joinColumns = @JoinColumn(name = "wallet_id"))
-    @Column(name = "asset_uuid", nullable = false)
-    private List<UUID> assets;
-
-    @ElementCollection
-    @CollectionTable(name = "wallet_frozen_assets", joinColumns = @JoinColumn(name = "wallet_id"))
-    @Column(name = "frozen_asset_uuid", nullable = false)
-    private List<UUID> frozenAssets;
+    @Column(nullable = false)
+    private String slugName;
 
     @Column(updatable = false)
     @CreationTimestamp
@@ -41,4 +40,8 @@ public class Wallet {
     @Column(nullable = false)
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @ManyToMany(mappedBy = "permissions", fetch = FetchType.LAZY)
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    private java.util.List<Role> roles;
 }
