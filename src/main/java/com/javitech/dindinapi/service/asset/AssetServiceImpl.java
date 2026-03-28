@@ -30,6 +30,11 @@ public class AssetServiceImpl implements AssetService{
     }
 
     @Override
+    public List<Asset> findAllById(Iterable<UUID> ids) {
+        return assetRepository.findAllById(ids);
+    }
+
+    @Override
     public Asset update(Asset asset) {
         return assetRepository.save(asset);
     }

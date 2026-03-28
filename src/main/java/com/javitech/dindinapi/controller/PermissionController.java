@@ -24,9 +24,11 @@ public class PermissionController {
     @Autowired
     private PermissionService permissionService;
 
+    @Autowired
+    private HttpServiceImpl httpService;
+
     @GetMapping
     public ResponseEntity<HashMap<String, Object>> findAll() {
-        HttpServiceImpl httpService = new HttpServiceImpl();
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(httpService.createResponse("Permissions retrieved successfully.", permissionService.findAll()));
@@ -34,16 +36,19 @@ public class PermissionController {
 
     @GetMapping("/{id}")
     public ResponseEntity<HashMap<String, Object>> findById(@PathVariable UUID id) {
-        HttpServiceImpl httpService = new HttpServiceImpl();
+        Optional<Permission> permission = permissionService.findById(id);
+        if (permission.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(httpService.createResponse("Permission with ID " + id + " does not exist.", null));
+        }
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(httpService.createResponse("Permission retrieved successfully.", permissionService.findById(id)));
+                .body(httpService.createResponse("Permission retrieved successfully.", permission.get()));
     }
 
     @PostMapping
     public ResponseEntity<HashMap<String, Object>> create(@RequestBody Permission permission) {
-        HttpServiceImpl httpService = new HttpServiceImpl();
-
         if (permission.getName() == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -57,8 +62,6 @@ public class PermissionController {
 
     @PutMapping
     public ResponseEntity<HashMap<String, Object>> update(@RequestBody Permission permission) {
-        HttpServiceImpl httpService = new HttpServiceImpl();
-
         if (permission.getId() == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -76,7 +79,6 @@ public class PermissionController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id) {
-        HttpServiceImpl httpService = new HttpServiceImpl();
         Optional<Permission> permission = permissionService.findById(id);
 
         if (permission.isEmpty()) {

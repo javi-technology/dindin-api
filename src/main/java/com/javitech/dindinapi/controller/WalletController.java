@@ -91,20 +91,14 @@ public class WalletController {
     }
 
     private boolean verifyAssets(List<UUID> assets) {
-        // TODO: Implementar recuperação em lote para otimização
-        // List<Asset> foundAssets = assetService.findAllByIds(assets);
-        // return foundAssets.size() != assets.size();
         if (assets == null) {
             return true;
         }
-
-        for (UUID assetUuid : assets) {
-            Optional<Asset> existingAsset = assetService.findById(assetUuid);
-            if (existingAsset.isEmpty()) {
-                return true;
-            }
+        if (assets.isEmpty()) {
+            return false;
         }
 
-        return false;
+        List<Asset> foundAssets = assetService.findAllById(assets);
+        return foundAssets.size() != assets.size();
     }
 }

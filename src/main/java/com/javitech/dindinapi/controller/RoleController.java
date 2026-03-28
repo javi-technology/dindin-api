@@ -18,9 +18,11 @@ public class RoleController {
     @Autowired
     private RoleService roleService;
 
+    @Autowired
+    private HttpServiceImpl httpService;
+
     @GetMapping
     public ResponseEntity<HashMap<String, Object>> findAll() {
-        HttpServiceImpl httpService = new HttpServiceImpl();
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(httpService.createResponse("Roles retrieved successfully.", roleService.findAll()));
@@ -28,7 +30,6 @@ public class RoleController {
 
     @GetMapping("/{id}")
     public ResponseEntity<HashMap<String, Object>> findById(@PathVariable UUID id){
-        HttpServiceImpl httpService = new HttpServiceImpl();
         Optional<Role> role = roleService.findById(id);
         if (role.isEmpty()) {
             return ResponseEntity
@@ -42,8 +43,6 @@ public class RoleController {
 
     @PostMapping
     public ResponseEntity<HashMap<String, Object>> create(@RequestBody Role role){
-        HttpServiceImpl httpService = new HttpServiceImpl();
-
         if (role.getId() != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -57,8 +56,6 @@ public class RoleController {
 
     @PutMapping
     public ResponseEntity<HashMap<String, Object>> update(@RequestBody Role role){
-        HttpServiceImpl httpService = new HttpServiceImpl();
-
         if (role.getId() == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -76,7 +73,6 @@ public class RoleController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id){
-        HttpServiceImpl httpService = new HttpServiceImpl();
         Optional<Role> role = roleService.findById(id);
 
         if (role.isEmpty()) {

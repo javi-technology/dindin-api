@@ -26,9 +26,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javitech.dindinapi.model.Permission;
 import com.javitech.dindinapi.service.permission.PermissionService;
+import com.javitech.dindinapi.service.utils.http.HttpServiceImpl;
+import org.springframework.context.annotation.Import;
 
 @WebMvcTest(PermissionController.class)
 @AutoConfigureMockMvc(addFilters = false)
+@Import(HttpServiceImpl.class)
 class PermissionControllerTest {
 
     @Autowired
