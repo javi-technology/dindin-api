@@ -1,8 +1,7 @@
 package com.javitech.dindinapi.repository;
 
+import com.javitech.dindinapi.model.Permission;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.javitech.dindinapi.model.Permission;
 
-public interface PermissionRepository extends JpaRepository<Permission, UUID> {
-}
+public interface PermissionRepository extends JpaRepository<Permission, UUID> {}

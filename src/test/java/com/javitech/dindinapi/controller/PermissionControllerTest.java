@@ -9,25 +9,23 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.javitech.dindinapi.model.Permission;
+import com.javitech.dindinapi.service.permission.PermissionService;
+import com.javitech.dindinapi.service.utils.http.HttpServiceImpl;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.javitech.dindinapi.model.Permission;
-import com.javitech.dindinapi.service.permission.PermissionService;
-import com.javitech.dindinapi.service.utils.http.HttpServiceImpl;
-import org.springframework.context.annotation.Import;
 
 @WebMvcTest(PermissionController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -61,12 +59,15 @@ class PermissionControllerTest {
     void shouldCreatePermission() throws Exception {
         when(permissionService.save(any(Permission.class))).thenReturn(permission);
 
-        mockMvc.perform(post("/api/permission")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(permission)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.message").value("Permission created successfully."))
-                .andExpect(jsonPath("$.data.name").value("TEST_PERMISSION"));
+        mockMvc
+            .perform(
+                post("/api/permission")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(permission))
+            )
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.message").value("Permission created successfully."))
+            .andExpect(jsonPath("$.data.name").value("TEST_PERMISSION"));
     }
 
     @Test
@@ -74,10 +75,13 @@ class PermissionControllerTest {
     void shouldReturn400WhenNameIsNull() throws Exception {
         permission.setName(null);
 
-        mockMvc.perform(post("/api/permission")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(permission)))
-                .andExpect(status().isBadRequest());
+        mockMvc
+            .perform(
+                post("/api/permission")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(permission))
+            )
+            .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -85,10 +89,11 @@ class PermissionControllerTest {
     void shouldReturnAllPermissions() throws Exception {
         when(permissionService.findAll()).thenReturn(List.of(permission));
 
-        mockMvc.perform(get("/api/permission"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Permissions retrieved successfully."))
-                .andExpect(jsonPath("$.data").isArray());
+        mockMvc
+            .perform(get("/api/permission"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.message").value("Permissions retrieved successfully."))
+            .andExpect(jsonPath("$.data").isArray());
     }
 
     @Test
@@ -96,9 +101,10 @@ class PermissionControllerTest {
     void shouldReturnPermissionById() throws Exception {
         when(permissionService.findById(permissionId)).thenReturn(Optional.of(permission));
 
-        mockMvc.perform(get("/api/permission/{id}", permissionId))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Permission retrieved successfully."));
+        mockMvc
+            .perform(get("/api/permission/{id}", permissionId))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.message").value("Permission retrieved successfully."));
     }
 
     @Test
@@ -107,11 +113,14 @@ class PermissionControllerTest {
         when(permissionService.findById(permissionId)).thenReturn(Optional.of(permission));
         when(permissionService.update(any(Permission.class))).thenReturn(permission);
 
-        mockMvc.perform(put("/api/permission")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(permission)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Permission updated successfully."));
+        mockMvc
+            .perform(
+                put("/api/permission")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(permission))
+            )
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.message").value("Permission updated successfully."));
     }
 
     @Test
@@ -119,10 +128,13 @@ class PermissionControllerTest {
     void shouldReturn404WhenUpdatingNonExisting() throws Exception {
         when(permissionService.findById(permissionId)).thenReturn(Optional.empty());
 
-        mockMvc.perform(put("/api/permission")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(permission)))
-                .andExpect(status().isNotFound());
+        mockMvc
+            .perform(
+                put("/api/permission")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(permission))
+            )
+            .andExpect(status().isNotFound());
     }
 
     @Test
@@ -130,9 +142,10 @@ class PermissionControllerTest {
     void shouldDeletePermission() throws Exception {
         when(permissionService.findById(permissionId)).thenReturn(Optional.of(permission));
 
-        mockMvc.perform(delete("/api/permission/{id}", permissionId))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Permission deleted successfully."));
+        mockMvc
+            .perform(delete("/api/permission/{id}", permissionId))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.message").value("Permission deleted successfully."));
     }
 
     @Test
@@ -140,7 +153,8 @@ class PermissionControllerTest {
     void shouldReturn404WhenDeletingNonExisting() throws Exception {
         when(permissionService.findById(permissionId)).thenReturn(Optional.empty());
 
-        mockMvc.perform(delete("/api/permission/{id}", permissionId))
-                .andExpect(status().isNotFound());
+        mockMvc
+            .perform(delete("/api/permission/{id}", permissionId))
+            .andExpect(status().isNotFound());
     }
 }

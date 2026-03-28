@@ -2,19 +2,19 @@ package com.javitech.dindinapi.controller;
 
 import com.javitech.dindinapi.model.Asset;
 import com.javitech.dindinapi.service.asset.AssetService;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
 @RestController
 @RequestMapping("/api/asset")
 public class AssetController {
+
     @Autowired
     private AssetService assetService;
 
@@ -25,9 +25,10 @@ public class AssetController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Asset> findById(@PathVariable UUID id) {
-        return assetService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return assetService
+            .findById(id)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping

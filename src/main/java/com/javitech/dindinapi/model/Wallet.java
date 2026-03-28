@@ -1,18 +1,18 @@
 package com.javitech.dindinapi.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
-
 @Data
 @Entity
-@Table(name="wallets")
+@Table(name = "wallets")
 public class Wallet {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "uuid", updatable = false, nullable = false)
@@ -25,18 +25,12 @@ public class Wallet {
     private String description;
 
     @ElementCollection
-    @CollectionTable(
-            name = "wallet_assets",
-            joinColumns = @JoinColumn(name = "wallet_id")
-    )
+    @CollectionTable(name = "wallet_assets", joinColumns = @JoinColumn(name = "wallet_id"))
     @Column(name = "asset_uuid", nullable = false)
     private List<UUID> assets;
 
     @ElementCollection
-    @CollectionTable(
-            name = "wallet_frozen_assets",
-            joinColumns = @JoinColumn(name = "wallet_id")
-    )
+    @CollectionTable(name = "wallet_frozen_assets", joinColumns = @JoinColumn(name = "wallet_id"))
     @Column(name = "frozen_asset_uuid", nullable = false)
     private List<UUID> frozenAssets;
 

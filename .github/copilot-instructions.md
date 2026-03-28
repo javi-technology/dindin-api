@@ -69,13 +69,11 @@ Ao gerar mensagens de commit, SEMPRE utilize o padrão Conventional Commits com 
 **SEMPRE extraia o número da issue do nome da branch e inclua na mensagem de commit:**
 
 1. **Branches no formato `issue-XX`**: Extrair o número após "issue-"
-
    - **OBRIGATÓRIO**: Se a branch for `issue-25`, você DEVE usar `#25` na mensagem
    - Exemplo: Branch `issue-25` → formato obrigatório: `feat(#25): descrição` ou `feat(books)(#25): descrição`
    - **ERRO CRÍTICO**: Gerar mensagem sem o número quando a branch é `issue-XX`
 
 2. **Branch `develop`**: SEMPRE usar `#44`
-
    - **OBRIGATÓRIO**: Se a branch for `develop`, você DEVE usar `#44` na mensagem
    - Formato obrigatório: `feat(#44): descrição` ou `feat(books)(#44): descrição`
    - **ERRO CRÍTICO**: Gerar mensagem sem o número quando a branch é `develop`

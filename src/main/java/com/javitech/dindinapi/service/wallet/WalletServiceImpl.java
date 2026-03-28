@@ -2,15 +2,15 @@ package com.javitech.dindinapi.service.wallet;
 
 import com.javitech.dindinapi.model.Wallet;
 import com.javitech.dindinapi.repository.WalletRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class WalletServiceImpl implements WalletService {
+
     @Autowired
     private WalletRepository walletRepository;
 

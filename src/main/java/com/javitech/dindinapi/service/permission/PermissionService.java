@@ -1,9 +1,9 @@
 package com.javitech.dindinapi.service.permission;
 
+import com.javitech.dindinapi.model.Permission;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import com.javitech.dindinapi.model.Permission;
 
 public interface PermissionService {
     Permission save(Permission permission);

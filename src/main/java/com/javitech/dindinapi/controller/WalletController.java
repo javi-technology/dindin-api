@@ -4,38 +4,40 @@ import com.javitech.dindinapi.model.Asset;
 import com.javitech.dindinapi.model.Wallet;
 import com.javitech.dindinapi.service.asset.AssetService;
 import com.javitech.dindinapi.service.wallet.WalletService;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
 @RestController
 @RequestMapping("/api/wallet")
 public class WalletController {
+
     @Autowired
     private WalletService walletService;
+
     @Autowired
     private AssetService assetService;
 
     @GetMapping
-    public ResponseEntity<List<Wallet>> findAll(){
+    public ResponseEntity<List<Wallet>> findAll() {
         return ResponseEntity.ok(walletService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Wallet> findById(@PathVariable UUID id){
-        return walletService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Wallet> findById(@PathVariable UUID id) {
+        return walletService
+            .findById(id)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<HashMap<String, Object>> create(@RequestBody Wallet wallet){
+    public ResponseEntity<HashMap<String, Object>> create(@RequestBody Wallet wallet) {
         HashMap<String, Object> resp = new HashMap<>();
 
         if (wallet.getId() != null) {
@@ -54,7 +56,7 @@ public class WalletController {
     }
 
     @PutMapping
-    public ResponseEntity<HashMap<String, Object>> update(@RequestBody Wallet wallet){
+    public ResponseEntity<HashMap<String, Object>> update(@RequestBody Wallet wallet) {
         HashMap<String, Object> resp = new HashMap<>();
 
         if (wallet.getId() == null) {
@@ -77,7 +79,7 @@ public class WalletController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable UUID id){
+    public ResponseEntity<?> delete(@PathVariable UUID id) {
         Optional<Wallet> wallet = walletService.findById(id);
         HashMap<String, Object> response = new HashMap<>();
 

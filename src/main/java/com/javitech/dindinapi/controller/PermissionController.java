@@ -1,5 +1,8 @@
 package com.javitech.dindinapi.controller;
 
+import com.javitech.dindinapi.model.Permission;
+import com.javitech.dindinapi.service.permission.PermissionService;
+import com.javitech.dindinapi.service.utils.http.HttpServiceImpl;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.UUID;
@@ -14,13 +17,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.javitech.dindinapi.model.Permission;
-import com.javitech.dindinapi.service.permission.PermissionService;
-import com.javitech.dindinapi.service.utils.http.HttpServiceImpl;
 
 @RestController
 @RequestMapping("/api/permission")
 public class PermissionController {
+
     @Autowired
     private PermissionService permissionService;
 
@@ -29,22 +30,25 @@ public class PermissionController {
 
     @GetMapping
     public ResponseEntity<HashMap<String, Object>> findAll() {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(httpService.createResponse("Permissions retrieved successfully.", permissionService.findAll()));
+        return ResponseEntity.status(HttpStatus.OK).body(
+            httpService.createResponse(
+                "Permissions retrieved successfully.",
+                permissionService.findAll()
+            )
+        );
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<HashMap<String, Object>> findById(@PathVariable UUID id) {
         Optional<Permission> permission = permissionService.findById(id);
         if (permission.isEmpty()) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(httpService.createResponse("Permission with ID " + id + " does not exist.", null));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                httpService.createResponse("Permission with ID " + id + " does not exist.", null)
+            );
         }
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(httpService.createResponse("Permission retrieved successfully.", permission.get()));
+        return ResponseEntity.status(HttpStatus.OK).body(
+            httpService.createResponse("Permission retrieved successfully.", permission.get())
+        );
     }
 
     @PostMapping
@@ -54,10 +58,9 @@ public class PermissionController {
         }
 
         Permission permissionCreated = permissionService.save(permission);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(httpService
-                        .createResponse("Permission created successfully.", permissionCreated));
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+            httpService.createResponse("Permission created successfully.", permissionCreated)
+        );
     }
 
     @PutMapping
@@ -71,10 +74,9 @@ public class PermissionController {
         }
 
         Permission permissionUpdated = permissionService.update(permission);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(httpService
-                        .createResponse("Permission updated successfully.", permissionUpdated));
+        return ResponseEntity.status(HttpStatus.OK).body(
+            httpService.createResponse("Permission updated successfully.", permissionUpdated)
+        );
     }
 
     @DeleteMapping("/{id}")
@@ -82,14 +84,14 @@ public class PermissionController {
         Optional<Permission> permission = permissionService.findById(id);
 
         if (permission.isEmpty()) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(httpService.createResponse("Permission with ID " + id + " does not exist.", null));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                httpService.createResponse("Permission with ID " + id + " does not exist.", null)
+            );
         }
 
         permissionService.deleteById(id);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(httpService.createResponse("Permission deleted successfully.", null));
+        return ResponseEntity.status(HttpStatus.OK).body(
+            httpService.createResponse("Permission deleted successfully.", null)
+        );
     }
 }

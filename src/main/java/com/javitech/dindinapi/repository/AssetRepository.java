@@ -1,9 +1,7 @@
 package com.javitech.dindinapi.repository;
 
 import com.javitech.dindinapi.model.Asset;
+import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.UUID;
-
-public interface AssetRepository extends JpaRepository<Asset, UUID> {
-}
+public interface AssetRepository extends JpaRepository<Asset, UUID> {}

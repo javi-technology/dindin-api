@@ -36,3 +36,5 @@ build/
 
 # Gemini
 .gemini/
+
+node_modules/

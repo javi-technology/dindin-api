@@ -1,264 +1,264 @@
 {
-    "info": {
-        "name": "DinDin API - Asset",
-        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  "info": {
+    "name": "DinDin API - Asset",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
     },
-    "variable": [
+    {
+      "key": "assetId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "POST - Criar asset (sucesso)",
+      "event": [
         {
-            "key": "baseUrl",
-            "value": "http://localhost:8080"
-        },
-        {
-            "key": "assetId",
-            "value": ""
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 201', () => pm.response.to.have.status(201));",
+              "pm.test('Retorna dados do asset', () => {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json).to.have.property('id');",
+              "  pm.expect(json.acronym).to.eql('PETR4');",
+              "  pm.expect(json.payment).to.eql(38.50);",
+              "  pm.collectionVariables.set('assetId', json.id);",
+              "});"
+            ]
+          }
         }
-    ],
-    "item": [
-        {
-            "name": "POST - Criar asset (sucesso)",
-            "event": [
-                {
-                    "listen": "test",
-                    "script": {
-                        "exec": [
-                            "pm.test('Status 201', () => pm.response.to.have.status(201));",
-                            "pm.test('Retorna dados do asset', () => {",
-                            "  const json = pm.response.json();",
-                            "  pm.expect(json).to.have.property('id');",
-                            "  pm.expect(json.acronym).to.eql('PETR4');",
-                            "  pm.expect(json.payment).to.eql(38.50);",
-                            "  pm.collectionVariables.set('assetId', json.id);",
-                            "});"
-                        ]
-                    }
-                }
-            ],
-            "request": {
-                "method": "POST",
-                "header": [
-                    {
-                        "key": "Content-Type",
-                        "value": "application/json"
-                    }
-                ],
-                "url": "{{baseUrl}}/api/asset",
-                "body": {
-                    "mode": "raw",
-                    "raw": "{\n  \"acronym\": \"PETR4\",\n  \"payment\": 38.50,\n  \"payday\": \"2026-04-01T00:00:00\"\n}"
-                }
-            }
-        },
-        {
-            "name": "POST - Criar asset com ID no body (400)",
-            "event": [
-                {
-                    "listen": "test",
-                    "script": {
-                        "exec": [
-                            "pm.test('Status 400', () => pm.response.to.have.status(400));"
-                        ]
-                    }
-                }
-            ],
-            "request": {
-                "method": "POST",
-                "header": [
-                    {
-                        "key": "Content-Type",
-                        "value": "application/json"
-                    }
-                ],
-                "url": "{{baseUrl}}/api/asset",
-                "body": {
-                    "mode": "raw",
-                    "raw": "{\n  \"id\": \"00000000-0000-0000-0000-000000000001\",\n  \"acronym\": \"VALE3\",\n  \"payment\": 60.00,\n  \"payday\": \"2026-04-01T00:00:00\"\n}"
-                }
-            }
-        },
-        {
-            "name": "GET - Listar todos os assets",
-            "event": [
-                {
-                    "listen": "test",
-                    "script": {
-                        "exec": [
-                            "pm.test('Status 200', () => pm.response.to.have.status(200));",
-                            "pm.test('Retorna array de assets', () => {",
-                            "  const json = pm.response.json();",
-                            "  pm.expect(json).to.be.an('array');",
-                            "  pm.expect(json.length).to.be.greaterThan(0);",
-                            "});"
-                        ]
-                    }
-                }
-            ],
-            "request": {
-                "method": "GET",
-                "url": "{{baseUrl}}/api/asset"
-            }
-        },
-        {
-            "name": "GET - Buscar asset por ID (sucesso)",
-            "event": [
-                {
-                    "listen": "test",
-                    "script": {
-                        "exec": [
-                            "pm.test('Status 200', () => pm.response.to.have.status(200));",
-                            "pm.test('Retorna asset correto', () => {",
-                            "  const json = pm.response.json();",
-                            "  pm.expect(json.id).to.eql(pm.collectionVariables.get('assetId'));",
-                            "  pm.expect(json.acronym).to.eql('PETR4');",
-                            "});"
-                        ]
-                    }
-                }
-            ],
-            "request": {
-                "method": "GET",
-                "url": "{{baseUrl}}/api/asset/{{assetId}}"
-            }
-        },
-        {
-            "name": "GET - Buscar asset por ID inexistente (404)",
-            "event": [
-                {
-                    "listen": "test",
-                    "script": {
-                        "exec": [
-                            "pm.test('Status 404', () => pm.response.to.have.status(404));"
-                        ]
-                    }
-                }
-            ],
-            "request": {
-                "method": "GET",
-                "url": "{{baseUrl}}/api/asset/00000000-0000-0000-0000-000000000000"
-            }
-        },
-        {
-            "name": "PUT - Atualizar asset (sucesso)",
-            "event": [
-                {
-                    "listen": "test",
-                    "script": {
-                        "exec": [
-                            "pm.test('Status 200', () => pm.response.to.have.status(200));",
-                            "pm.test('Acronym atualizado', () => {",
-                            "  const json = pm.response.json();",
-                            "  pm.expect(json.acronym).to.eql('VALE3');",
-                            "  pm.expect(json.payment).to.eql(62.75);",
-                            "});"
-                        ]
-                    }
-                }
-            ],
-            "request": {
-                "method": "PUT",
-                "header": [
-                    {
-                        "key": "Content-Type",
-                        "value": "application/json"
-                    }
-                ],
-                "url": "{{baseUrl}}/api/asset",
-                "body": {
-                    "mode": "raw",
-                    "raw": "{\n  \"id\": \"{{assetId}}\",\n  \"acronym\": \"VALE3\",\n  \"payment\": 62.75,\n  \"payday\": \"2026-05-01T00:00:00\"\n}"
-                }
-            }
-        },
-        {
-            "name": "PUT - Atualizar asset sem ID (400)",
-            "event": [
-                {
-                    "listen": "test",
-                    "script": {
-                        "exec": [
-                            "pm.test('Status 400', () => pm.response.to.have.status(400));"
-                        ]
-                    }
-                }
-            ],
-            "request": {
-                "method": "PUT",
-                "header": [
-                    {
-                        "key": "Content-Type",
-                        "value": "application/json"
-                    }
-                ],
-                "url": "{{baseUrl}}/api/asset",
-                "body": {
-                    "mode": "raw",
-                    "raw": "{\n  \"acronym\": \"ITUB4\",\n  \"payment\": 30.00,\n  \"payday\": \"2026-04-15T00:00:00\"\n}"
-                }
-            }
-        },
-        {
-            "name": "PUT - Atualizar asset com ID inexistente (404)",
-            "event": [
-                {
-                    "listen": "test",
-                    "script": {
-                        "exec": [
-                            "pm.test('Status 404', () => pm.response.to.have.status(404));"
-                        ]
-                    }
-                }
-            ],
-            "request": {
-                "method": "PUT",
-                "header": [
-                    {
-                        "key": "Content-Type",
-                        "value": "application/json"
-                    }
-                ],
-                "url": "{{baseUrl}}/api/asset",
-                "body": {
-                    "mode": "raw",
-                    "raw": "{\n  \"id\": \"00000000-0000-0000-0000-000000000000\",\n  \"acronym\": \"INEXISTENTE\",\n  \"payment\": 0.00,\n  \"payday\": \"2026-04-01T00:00:00\"\n}"
-                }
-            }
-        },
-        {
-            "name": "DELETE - Deletar asset (sucesso)",
-            "event": [
-                {
-                    "listen": "test",
-                    "script": {
-                        "exec": [
-                            "pm.test('Status 200', () => pm.response.to.have.status(200));",
-                            "pm.test('Mensagem de sucesso', () => {",
-                            "  const json = pm.response.json();",
-                            "  pm.expect(json.message).to.eql('Asset deleted successfully');",
-                            "});"
-                        ]
-                    }
-                }
-            ],
-            "request": {
-                "method": "DELETE",
-                "url": "{{baseUrl}}/api/asset/{{assetId}}"
-            }
-        },
-        {
-            "name": "DELETE - Deletar asset com ID inexistente (404)",
-            "event": [
-                {
-                    "listen": "test",
-                    "script": {
-                        "exec": [
-                            "pm.test('Status 404', () => pm.response.to.have.status(404));"
-                        ]
-                    }
-                }
-            ],
-            "request": {
-                "method": "DELETE",
-                "url": "{{baseUrl}}/api/asset/00000000-0000-0000-0000-000000000000"
-            }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/asset",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"acronym\": \"PETR4\",\n  \"payment\": 38.50,\n  \"payday\": \"2026-04-01T00:00:00\"\n}"
         }
-    ]
+      }
+    },
+    {
+      "name": "POST - Criar asset com ID no body (400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 400', () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/asset",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"00000000-0000-0000-0000-000000000001\",\n  \"acronym\": \"VALE3\",\n  \"payment\": 60.00,\n  \"payday\": \"2026-04-01T00:00:00\"\n}"
+        }
+      }
+    },
+    {
+      "name": "GET - Listar todos os assets",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));",
+              "pm.test('Retorna array de assets', () => {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json).to.be.an('array');",
+              "  pm.expect(json.length).to.be.greaterThan(0);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/asset"
+      }
+    },
+    {
+      "name": "GET - Buscar asset por ID (sucesso)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));",
+              "pm.test('Retorna asset correto', () => {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json.id).to.eql(pm.collectionVariables.get('assetId'));",
+              "  pm.expect(json.acronym).to.eql('PETR4');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/asset/{{assetId}}"
+      }
+    },
+    {
+      "name": "GET - Buscar asset por ID inexistente (404)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/asset/00000000-0000-0000-0000-000000000000"
+      }
+    },
+    {
+      "name": "PUT - Atualizar asset (sucesso)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));",
+              "pm.test('Acronym atualizado', () => {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json.acronym).to.eql('VALE3');",
+              "  pm.expect(json.payment).to.eql(62.75);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/asset",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"{{assetId}}\",\n  \"acronym\": \"VALE3\",\n  \"payment\": 62.75,\n  \"payday\": \"2026-05-01T00:00:00\"\n}"
+        }
+      }
+    },
+    {
+      "name": "PUT - Atualizar asset sem ID (400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 400', () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/asset",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"acronym\": \"ITUB4\",\n  \"payment\": 30.00,\n  \"payday\": \"2026-04-15T00:00:00\"\n}"
+        }
+      }
+    },
+    {
+      "name": "PUT - Atualizar asset com ID inexistente (404)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/asset",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"00000000-0000-0000-0000-000000000000\",\n  \"acronym\": \"INEXISTENTE\",\n  \"payment\": 0.00,\n  \"payday\": \"2026-04-01T00:00:00\"\n}"
+        }
+      }
+    },
+    {
+      "name": "DELETE - Deletar asset (sucesso)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));",
+              "pm.test('Mensagem de sucesso', () => {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json.message).to.eql('Asset deleted successfully');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/api/asset/{{assetId}}"
+      }
+    },
+    {
+      "name": "DELETE - Deletar asset com ID inexistente (404)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/api/asset/00000000-0000-0000-0000-000000000000"
+      }
+    }
+  ]
 }

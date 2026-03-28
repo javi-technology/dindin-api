@@ -1,10 +1,11 @@
 package com.javitech.dindinapi.service.utils.http;
 
-import org.springframework.stereotype.Service;
 import java.util.HashMap;
+import org.springframework.stereotype.Service;
 
 @Service
 public class HttpServiceImpl implements HttpService {
+
     public HttpServiceImpl() {}
 
     @Override
