@@ -45,7 +45,7 @@
                 "url": "{{baseUrl}}/api/asset",
                 "body": {
                     "mode": "raw",
-                    "raw": "{\n  \"ticker\": \"PETR4\",\n  \"name\": \"Petrobras PN\",\n  \"currentPrice\": 38.50\n}"
+                    "raw": "{\n  \"acronym\": \"PETR4\",\n  \"payment\": 38.50,\n  \"payday\": \"2026-04-01T00:00:00\"\n}"
                 }
             }
         },
