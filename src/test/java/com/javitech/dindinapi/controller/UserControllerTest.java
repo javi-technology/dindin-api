@@ -1,13 +1,17 @@
 package com.javitech.dindinapi.controller;
 
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.javitech.dindinapi.exception.ResourceNotFoundException;
 import com.javitech.dindinapi.model.User;
 import com.javitech.dindinapi.service.user.UserService;
 import com.javitech.dindinapi.service.utils.http.HttpServiceImpl;
+import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(UserController.class)
 @AutoConfigureMockMvc(addFilters = false)
-@Import(HttpServiceImpl.class)
+@Import({ HttpServiceImpl.class, GlobalExceptionHandler.class })
 class UserControllerTest {
 
     @Autowired
@@ -30,16 +34,37 @@ class UserControllerTest {
     @MockitoBean
     private UserService userService;
 
-    private User user;
     private UUID userId;
 
     @BeforeEach
     void setUp() {
         userId = UUID.randomUUID();
-        user = new User();
+    }
+
+    @Test
+    @DisplayName("Should find a user by ID and return 200 OK")
+    void shouldFindById() throws Exception {
+        User user = new User();
         user.setId(userId);
         user.setName("Test User");
-        user.setIsApproved(false);
+
+        when(userService.findById(userId)).thenReturn(Optional.of(user));
+
+        mockMvc
+            .perform(get("/api/user/{id}", userId))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value(userId.toString()))
+            .andExpect(jsonPath("$.name").value("Test User"));
+    }
+
+    @Test
+    @DisplayName("Should return 404 Not Found when user does not exist")
+    void shouldReturn404WhenUserNotFound() throws Exception {
+        when(userService.findById(userId)).thenReturn(Optional.empty());
+
+        mockMvc
+            .perform(get("/api/user/{id}", userId))
+            .andExpect(status().isNotFound());
     }
 
     @Test
@@ -58,18 +83,15 @@ class UserControllerTest {
         "Should return 404 Not Found when approving a non-existing user"
     )
     void shouldReturn404WhenApprovingNonExisting() throws Exception {
-        doThrow(
-            new IllegalArgumentException(
-                "User with ID " + userId + " does not exist"
-            )
-        )
+        String errorMessage = "User with ID " + userId + " does not exist";
+        doThrow(new ResourceNotFoundException(errorMessage))
             .when(userService)
             .approveUser(userId);
 
         mockMvc
             .perform(put("/api/user/approve/{id}", userId))
             .andExpect(status().isNotFound())
-            .andExpect(jsonPath("$.message").value("User not found"));
+            .andExpect(jsonPath("$.message").value(errorMessage));
     }
 
     @Test
@@ -88,17 +110,14 @@ class UserControllerTest {
         "Should return 404 Not Found when rejecting a non-existing user"
     )
     void shouldReturn404WhenRejectingNonExisting() throws Exception {
-        doThrow(
-            new IllegalArgumentException(
-                "User with ID " + userId + " does not exist"
-            )
-        )
+        String errorMessage = "User with ID " + userId + " does not exist";
+        doThrow(new ResourceNotFoundException(errorMessage))
             .when(userService)
             .rejectUser(userId);
 
         mockMvc
             .perform(put("/api/user/reject/{id}", userId))
             .andExpect(status().isNotFound())
-            .andExpect(jsonPath("$.message").value("User not found"));
+            .andExpect(jsonPath("$.message").value(errorMessage));
     }
 }

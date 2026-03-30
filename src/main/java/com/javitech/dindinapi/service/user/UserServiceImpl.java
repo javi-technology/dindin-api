@@ -1,5 +1,6 @@
 package com.javitech.dindinapi.service.user;
 
+import com.javitech.dindinapi.exception.ResourceNotFoundException;
 import com.javitech.dindinapi.model.User;
 import com.javitech.dindinapi.repository.UserRepository;
 import java.util.List;
@@ -47,9 +48,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void approveUser(UUID id) {
         User user = userRepository
-                .findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "User with ID " + id + " does not exist"));
+            .findById(id)
+            .orElseThrow(() ->
+                new ResourceNotFoundException(
+                    "User with ID " + id + " does not exist"
+                )
+            );
         user.setIsApproved(true);
         userRepository.save(user);
     }
@@ -57,9 +61,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void rejectUser(UUID id) {
         User user = userRepository
-                .findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "User with ID " + id + " does not exist"));
+            .findById(id)
+            .orElseThrow(() ->
+                new ResourceNotFoundException(
+                    "User with ID " + id + " does not exist"
+                )
+            );
         user.setIsApproved(false);
         userRepository.save(user);
     }

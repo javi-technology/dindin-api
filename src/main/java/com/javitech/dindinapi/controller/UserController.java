@@ -4,7 +4,6 @@ import com.javitech.dindinapi.model.User;
 import com.javitech.dindinapi.service.user.UserService;
 import com.javitech.dindinapi.service.utils.http.HttpService;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,10 +26,11 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<User>> findById(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.OK).body(
-            userService.findById(id)
-        );
+    public ResponseEntity<User> findById(@PathVariable UUID id) {
+        return userService
+            .findById(id)
+            .map(user -> ResponseEntity.status(HttpStatus.OK).body(user))
+            .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @PostMapping
@@ -62,30 +62,18 @@ public class UserController {
 
     @PutMapping("/approve/{id}")
     public ResponseEntity<?> approveUser(@PathVariable UUID id) {
-        try {
-            userService.approveUser(id);
-            return ResponseEntity.status(HttpStatus.OK).body(
-                httpService.createResponse("User approved successfully.", null)
-            );
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                httpService.createResponse("User not found", null)
-            );
-        }
+        userService.approveUser(id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+            httpService.createResponse("User approved successfully.", null)
+        );
     }
 
     @PutMapping("/reject/{id}")
     public ResponseEntity<?> rejectUser(@PathVariable UUID id) {
-        try {
-            userService.rejectUser(id);
-            return ResponseEntity.status(HttpStatus.OK).body(
-                httpService.createResponse("User rejected successfully.", null)
-            );
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                httpService.createResponse("User not found", null)
-            );
-        }
+        userService.rejectUser(id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+            httpService.createResponse("User rejected successfully.", null)
+        );
     }
 
     @GetMapping("/approved")
