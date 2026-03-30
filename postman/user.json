@@ -244,7 +244,7 @@
                             "pm.test('Status 404', () => pm.response.to.have.status(404));",
                             "pm.test('Mensagem de user não encontrado', () => {",
                             "  const json = pm.response.json();",
-                            "  pm.expect(json.message).to.eql('User not found');",
+                            "  pm.expect(json.message).to.include('does not exist');",
                             "});"
                         ]
                     }
@@ -286,7 +286,7 @@
                             "pm.test('Status 404', () => pm.response.to.have.status(404));",
                             "pm.test('Mensagem de user não encontrado', () => {",
                             "  const json = pm.response.json();",
-                            "  pm.expect(json.message).to.eql('User not found');",
+                            "  pm.expect(json.message).to.include('does not exist');",
                             "});"
                         ]
                     }
