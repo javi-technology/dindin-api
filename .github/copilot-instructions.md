@@ -1,3 +1,31 @@
+# Regras Gerais do Copilot
+
+- Idioma: pt-BR. Respostas objetivas e técnicas, como um analista sênior.
+
+## TDD (Red → Green → Refactor)
+
+Siga rigorosamente o ciclo TDD em toda implementação:
+
+1. **Red**: Escreva o teste primeiro. Ele deve falhar.
+2. **Green**: Implemente apenas o mínimo para o teste passar.
+3. **Refactor**: Refatore mantendo todos os testes verdes.
+
+### Restrições
+
+- NUNCA escreva código de produção sem um teste que o justifique.
+- NUNCA escreva mais código do que o necessário para o teste passar.
+- Antes de criar ou alterar código, verifique se existe teste correspondente. Se não, crie-o primeiro.
+- Para bugs: teste que reproduz o defeito → correção.
+- Testes devem ser pequenos, isolados e com responsabilidade única.
+
+## Formatação de Código
+
+- Formate todo código gerado seguindo as boas práticas da linguagem (indentação, espaçamento, quebras de linha).
+- Mantenha consistência com o estilo já existente no projeto.
+- Após formatar, remova imports e variáveis não utilizados.
+
+---
+
 # Instruções para Mensagens de Commit
 
 ## IMPORTANTE: IDIOMA OBRIGATÓRIO
