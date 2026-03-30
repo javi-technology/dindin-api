@@ -1,0 +1,322 @@
+{
+    "info": {
+        "name": "DinDin API - User",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:8080"
+        },
+        {
+            "key": "userId",
+            "value": ""
+        }
+    ],
+    "item": [
+        {
+            "name": "POST - Criar user (sucesso)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                            "pm.test('Retorna dados do user', () => {",
+                            "  const json = pm.response.json();",
+                            "  pm.expect(json).to.have.property('id');",
+                            "  pm.expect(json.name).to.eql('João Silva');",
+                            "  pm.expect(json.email).to.eql('joao@email.com');",
+                            "  pm.expect(json.isApproved).to.eql(false);",
+                            "  pm.collectionVariables.set('userId', json.id);",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": "{{baseUrl}}/api/user",
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"firebaseUserId\": \"firebase-uid-001\",\n  \"name\": \"João Silva\",\n  \"email\": \"joao@email.com\",\n  \"country\": \"Brasil\",\n  \"state\": \"SP\",\n  \"city\": \"São Paulo\",\n  \"whatsapp\": \"11999999999\",\n  \"birthday\": \"1990-05-15\",\n  \"isApproved\": false,\n  \"roles\": []\n}"
+                }
+            }
+        },
+        {
+            "name": "POST - Criar user com ID no body (400)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Status 400', () => pm.response.to.have.status(400));"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": "{{baseUrl}}/api/user",
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"id\": \"00000000-0000-0000-0000-000000000001\",\n  \"firebaseUserId\": \"firebase-uid-002\",\n  \"name\": \"Maria\",\n  \"email\": \"maria@email.com\",\n  \"country\": \"Brasil\",\n  \"state\": \"RJ\",\n  \"city\": \"Rio de Janeiro\",\n  \"whatsapp\": \"21988888888\",\n  \"birthday\": \"1995-03-20\",\n  \"isApproved\": false,\n  \"roles\": []\n}"
+                }
+            }
+        },
+        {
+            "name": "GET - Listar todos os users",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                            "pm.test('Retorna array de users', () => {",
+                            "  const json = pm.response.json();",
+                            "  pm.expect(json).to.be.an('array');",
+                            "  pm.expect(json.length).to.be.greaterThan(0);",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/user"
+            }
+        },
+        {
+            "name": "GET - Buscar user por ID (sucesso)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/user/{{userId}}"
+            }
+        },
+        {
+            "name": "GET - Buscar user por ID inexistente",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Status 200 com Optional vazio', () => {",
+                            "  pm.response.to.have.status(200);",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/user/00000000-0000-0000-0000-000000000000"
+            }
+        },
+        {
+            "name": "GET - Listar users aprovados",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                            "pm.test('Retorna array', () => {",
+                            "  const json = pm.response.json();",
+                            "  pm.expect(json).to.be.an('array');",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/user/approved"
+            }
+        },
+        {
+            "name": "PUT - Atualizar user (sucesso)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                            "pm.test('Nome atualizado', () => {",
+                            "  const json = pm.response.json();",
+                            "  pm.expect(json.name).to.eql('João Santos');",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "PUT",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": "{{baseUrl}}/api/user",
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"id\": \"{{userId}}\",\n  \"firebaseUserId\": \"firebase-uid-001\",\n  \"name\": \"João Santos\",\n  \"email\": \"joao@email.com\",\n  \"country\": \"Brasil\",\n  \"state\": \"SP\",\n  \"city\": \"Campinas\",\n  \"whatsapp\": \"19977777777\",\n  \"birthday\": \"1990-05-15\",\n  \"isApproved\": false,\n  \"roles\": []\n}"
+                }
+            }
+        },
+        {
+            "name": "PUT - Atualizar user sem ID (400)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Status 400', () => pm.response.to.have.status(400));"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "PUT",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": "{{baseUrl}}/api/user",
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"firebaseUserId\": \"firebase-uid-003\",\n  \"name\": \"Sem ID\",\n  \"email\": \"semid@email.com\",\n  \"country\": \"Brasil\",\n  \"state\": \"MG\",\n  \"city\": \"BH\",\n  \"whatsapp\": \"31966666666\",\n  \"birthday\": \"2000-01-01\",\n  \"isApproved\": false,\n  \"roles\": []\n}"
+                }
+            }
+        },
+        {
+            "name": "PUT - Aprovar user (sucesso)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                            "pm.test('Mensagem de aprovação', () => {",
+                            "  const json = pm.response.json();",
+                            "  pm.expect(json.message).to.eql('User approved successfully.');",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "PUT",
+                "url": "{{baseUrl}}/api/user/approve/{{userId}}"
+            }
+        },
+        {
+            "name": "PUT - Aprovar user inexistente (404)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Status 404', () => pm.response.to.have.status(404));",
+                            "pm.test('Mensagem de user não encontrado', () => {",
+                            "  const json = pm.response.json();",
+                            "  pm.expect(json.message).to.eql('User not found');",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "PUT",
+                "url": "{{baseUrl}}/api/user/approve/00000000-0000-0000-0000-000000000000"
+            }
+        },
+        {
+            "name": "PUT - Rejeitar user (sucesso)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                            "pm.test('Mensagem de rejeição', () => {",
+                            "  const json = pm.response.json();",
+                            "  pm.expect(json.message).to.eql('User rejected successfully.');",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "PUT",
+                "url": "{{baseUrl}}/api/user/reject/{{userId}}"
+            }
+        },
+        {
+            "name": "PUT - Rejeitar user inexistente (404)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Status 404', () => pm.response.to.have.status(404));",
+                            "pm.test('Mensagem de user não encontrado', () => {",
+                            "  const json = pm.response.json();",
+                            "  pm.expect(json.message).to.eql('User not found');",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "PUT",
+                "url": "{{baseUrl}}/api/user/reject/00000000-0000-0000-0000-000000000000"
+            }
+        },
+        {
+            "name": "DELETE - Deletar user (sucesso)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                            "pm.test('Mensagem de sucesso', () => {",
+                            "  const json = pm.response.json();",
+                            "  pm.expect(json.message).to.eql('User deleted successfully.');",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "DELETE",
+                "url": "{{baseUrl}}/api/user/{{userId}}"
+            }
+        }
+    ]
+}

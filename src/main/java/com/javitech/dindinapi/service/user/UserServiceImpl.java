@@ -42,16 +42,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findByApproved() {
-        List<User> users = userRepository.findAll();
-        List<User> approvedUsers = new ArrayList<>();
-
-        for (User user : users) {
-            if (user.getIsApproved() != null && user.getIsApproved()) {
-                approvedUsers.add(user);
-            }
-        }
-
-        return approvedUsers;
+        return userRepository.findByIsApprovedTrue();
     }
 
     @Override
@@ -59,7 +50,9 @@ public class UserServiceImpl implements UserService {
         User user = userRepository
             .findById(id)
             .orElseThrow(() ->
-                new IllegalArgumentException("User with ID " + id + " does not exist")
+                new IllegalArgumentException(
+                    "User with ID " + id + " does not exist"
+                )
             );
         user.setIsApproved(true);
         userRepository.save(user);
@@ -70,7 +63,9 @@ public class UserServiceImpl implements UserService {
         User user = userRepository
             .findById(id)
             .orElseThrow(() ->
-                new IllegalArgumentException("User with ID " + id + " does not exist")
+                new IllegalArgumentException(
+                    "User with ID " + id + " does not exist"
+                )
             );
         user.setIsApproved(false);
         userRepository.save(user);
